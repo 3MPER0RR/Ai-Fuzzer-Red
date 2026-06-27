@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI Red Team - Multi-Infrastructure Fuzzer (Ollama, Groq, OpenRouter)
+AI fuzzer - Multi-Infrastructure Fuzzer (Ollama, Groq, OpenRouter)
 Autore: Ispirato dalle tecniche di Elder Plinius e adattato per fini di ricerca etica.
 """
 
