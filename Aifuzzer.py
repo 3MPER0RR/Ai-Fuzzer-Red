@@ -118,7 +118,7 @@ def query_openrouter(prompt, model=MODEL_OPENROUTER):
     if OPENROUTER_API_KEY == "IL_TUO_TOKEN_OPENROUTER":
         return "[!] Salto il test su OpenRouter: API Key non configurata."
 
-    url = "https://openrouter.ai"
+    url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
