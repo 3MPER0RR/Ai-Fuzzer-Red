@@ -93,7 +93,7 @@ def query_groq(prompt, model=MODEL_GROQ):
     if GROQ_API_KEY == "IL_TUO_TOKEN_GROQ":
         return "[!] Salto il test su Groq: API Key non configurata."
         
-    url = "https://groq.com"
+    url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}", 
         "Content-Type": "application/json"
