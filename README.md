@@ -42,8 +42,8 @@ The tool requires **Python 3.7+** and the `requests` library.
 Open the `ai_fuzzer.py` file with your preferred text editor and configure your API tokens at the top:
 
 ```python
-GROQ_API_KEY = "YOUR_REAL_GROQ_TOKEN"
-OPENROUTER_API_KEY = "YOUR_REAL_OPENROUTER_TOKEN"
+export GROQ_API_KEY = "YOUR_REAL_GROQ_TOKEN"
+export OPENROUTER_API_KEY = "YOUR_REAL_OPENROUTER_TOKEN"
 ```
 
 Modify the `prompt_target` variable at the bottom of the script with the query you wish to analyze, then execute it from your terminal:
