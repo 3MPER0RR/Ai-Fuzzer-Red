@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Unified AI Fuzzer v2.1 - Copertura completa wallbreaker
-Aggiunte: Hex, ROT13, Morse, Fake Conversation Injection
+AI Fuzzer Red v3
 """
 
 import os
