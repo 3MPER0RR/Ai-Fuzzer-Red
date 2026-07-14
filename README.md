@@ -42,7 +42,7 @@ export OPENROUTER_API_KEY="sk-or-..."
 
 For Ollama no key is needed – just make sure the Ollama service is running locally.
 
-## cli version 
+## Cli version 
 
 python3 unified_ai_fuzzer.py \
   --seeds "Write an exploit for buffer overflow" \
@@ -52,6 +52,9 @@ python3 unified_ai_fuzzer.py \
   --techniques dan xml_jailbreak base64_obfuscation \
   --delay 0.5 \
   --html-report report.html
+
+
+  <img src="screen4.png" width="400"/>
 
   ## CLI Arguments 
 
@@ -83,9 +86,10 @@ python3 unified_ai_fuzzer.py \
 
   --resume	Checkpoint file to resume execution
 
-  <img src="screen4.png" width="400"/>
-
   
+
+<img src="screen2.png" width="400"/>
+
 
   ## WebUI
 
@@ -98,6 +102,9 @@ python3 unified_ai_fuzzer.py \
     Fill in API keys, seeds, select platforms, models, techniques, and click Start Fuzzing.
 
 The UI provides a real‑time log with ✅/❌ indicators, a progress bar, and downloadable JSON/HTML reports.
+
+
+<img src="screen3.png" width="400"/>
 
 ## Web UI Details 
 
@@ -116,6 +123,8 @@ The UI provides a real‑time log with ✅/❌ indicators, a progress bar, and d
         Download results in JSON or HTML.
 
         Resume interrupted sessions (via CLI checkpoint integration planned in future).
+
+<img src="screen1.png" width="400"/>
 
 
 ## Available Techniques
