@@ -21,8 +21,8 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/tuouser/unified-ai-fuzzer.git
-   cd unified-ai-fuzzer
+   git clone https://github.com/tuouser/ai-fuzzer-red.git
+   cd AiFuzzerRed
 
 ---
 ## Python3.8 +
