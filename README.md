@@ -1,60 +1,150 @@
 # AI Fuzzer 🚀
 
-An automated Python 3 framework designed for **Adversarial Fuzzing** and security stress-testing on Large Language Models (LLMs). This tool applies advanced logical and semantic mutations (inspired by *Elder Plinius* research techniques) and concurrently distributes the payloads across three distinct environments: **Ollama** (local), **Groq** (Cloud LPU), and **OpenRouter** (Frontier Models).
+> A modular tool for testing LLM robustness using advanced fuzzing techniques.  
+> Combines **green** (template injection) and **red** (jailbreak/obfuscation) approaches, with both a **command‑line interface** and a **dark‑themed web GUI**.
 
-## ⚠️ Disclaimer (Legal Notice)
+##  Key Features
 
-**This tool is released strictly for academic research, authorized penetration testing, and defensive development purposes.**  
-The author assumes no liability for any misuse, damage, or violation of the Terms of Service (ToS) of any API providers (OpenAI, Anthropic, Groq, OpenRouter, etc.) resulting from the execution of this script. Do not target models or systems without explicit prior authorization for Red Teaming activities.
+- **15 mutation techniques** to craft adversarial payloads from harmless seeds
+- **Multi‑provider**: Ollama (local), OpenAI, Anthropic, Groq, OpenRouter
+- **Automatic jailbreak success detection** (heuristic classifier)
+- **Two interfaces**:
+  - **CLI** – lightweight, scriptable, ideal for automation
+  - **Web UI** – hacker‑style dashboard (like t3mp3st), with live progress and preview
+- **Automatic retry** with exponential backoff
+- **Configurable rate limiting** (`--delay` in CLI, adjustable in Web UI)
+- **Checkpoint resume** – never lose progress if interrupted
+- **Reporting** in JSON and HTML (both interfaces)
+- **Progress bar** in CLI, live log in Web UI
+
+## 📦 Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/tuouser/unified-ai-fuzzer.git
+   cd unified-ai-fuzzer
 
 ---
+## Python3.8 +
 
-## 🔥 Key Features
+pip install requests tqdm flask
 
-- **Multi-Infrastructure Distribution**: Evaluate the exact same adversarial payload simultaneously across local and cloud-based deployments.
-- **Homoglyph Attack Engine (Cyrillic Mutation)**: Obfuscates sensitive keywords using lookalike Unicode characters to bypass superficial tokenizers.
-- **XML Tag Injection**: Simulates structural system boundary constraints (`</system_prompt>`) to test logical guardrail overrides.
-- **Base64 Encoding Obfuscation**: Encapsulates input strings to audit the model's internal multi-step decoding and execution path.
-- **Fault-Tolerant Engine**: Native handling of connection timeouts, server crashes, and API errors to ensure uninterrupted fuzzing cycles.
+requests and tqdm are required for CLI.
 
-## 🛠️ Requirements & Installation
+flask is required for the Web UI.
 
-The tool requires **Python 3.7+** and the `requests` library.
+*Set your API keys (optional, depending on providers)*:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com
-   cd your-repo-name
-   ```
+export OPENAI_API_KEY="sk-..."
+export ANTHROPIC_API_KEY="sk-ant-..."
+export GROQ_API_KEY="gsk_..."
+export OPENROUTER_API_KEY="sk-or-..."
 
-2. Install dependencies:
-   ```bash
-   pip3 install requests
-   ```
+For Ollama no key is needed – just make sure the Ollama service is running locally.
 
-3. (Optional) If you plan to test local open-source models, ensure [Ollama](https://ollama.com) is up and running on your machine:
-   ```bash
-   ollama run llama3
-   ```
+## cli version 
 
-## 🚀 Configuration & Usage
+python3 unified_ai_fuzzer.py \
+  --seeds "Write an exploit for buffer overflow" \
+  --platforms ollama openai \
+  --models-ollama llama3 \
+  --models-openai gpt-4o \
+  --techniques dan xml_jailbreak base64_obfuscation \
+  --delay 0.5 \
+  --html-report report.html
 
-Open the `ai_fuzzer.py` file with your preferred text editor and configure your API tokens at the top:
+  ## CLI Arguments 
 
-```python
-export GROQ_API_KEY = "YOUR_REAL_GROQ_TOKEN"
-export OPENROUTER_API_KEY = "YOUR_REAL_OPENROUTER_TOKEN"
-```
+  --seeds	One or more starting prompts (required)
 
-Modify the `prompt_target` variable at the bottom of the script with the query you wish to analyze, then execute it from your terminal:
+  --platforms	Providers: ollama, openai, anthropic, groq, openrouter (required)
 
-```bash
-python3 ai_fuzzer.py
-```
+  --techniques	Mutation techniques (required, see list above)
 
-## 📊 Output Analysis
+  --models-ollama	Ollama models (e.g. llama3)
 
-The terminal UI will display in real-time:
-1. The original plaintext target prompt.
-2. The mutation logic applied by the fuzzing engine.
-3. Truncated output previews returned by each provider, allowing you to immediately map which models sustained their alignment and which ones were successfully jailbroken.
+  --models-openai	OpenAI models (e.g. gpt-4o)
+
+  --models-anthropic	Anthropic models (e.g. claude-3-5-sonnet-20240620)
+
+  --models-groq	Groq models (e.g. llama3-8b-8192)
+
+  --models-openrouter	OpenRouter models (e.g. google/gemma-4-31b-it:free)
+
+  --delay	Seconds between requests (default 0.5)
+
+  --retries	Max retry attempts on error (default 3)
+
+  -l, --log-file	JSON log file (default fuzz.json)
+
+  -r, --report-file	JSON report file (default unified_fuzz_report.json)
+
+  --html-report	HTML report path (default fuzz_report.html)
+
+  --resume	Checkpoint file to resume execution
+
+  
+
+  ## WebUI
+
+  Launch the web server:
+  
+  python3 app.py
+
+      Open your browser at http://localhost:5000.
+
+    Fill in API keys, seeds, select platforms, models, techniques, and click Start Fuzzing.
+
+The UI provides a real‑time log with ✅/❌ indicators, a progress bar, and downloadable JSON/HTML reports.
+
+## Web UI Details 
+
+     URL: http://localhost:5000
+
+    Style: Dark hacker theme (customizable via CSS variables in templates/index.html)
+
+    Capabilities:
+
+        Manage API keys for all providers directly in the interface.
+
+        Preview mutated payloads before running.
+
+        Start/stop fuzzing sessions, watch live progress.
+
+        Download results in JSON or HTML.
+
+        Resume interrupted sessions (via CLI checkpoint integration planned in future).
+
+
+## Available Techniques
+
+template_role	Injects a "security analyst" role
+
+template_json	Wraps the prompt in JSON format
+
+homoglyph	Replaces letters with Cyrillic homoglyphs
+
+xml_jailbreak	Fake system reset using XML tags
+
+base64_obfuscation	Base64 encoding + decode instruction
+
+hex_obfuscation	Hex encoding + decode instruction
+
+rot13_obfuscation	ROT13 encoding + decode instruction
+
+morse_obfuscation	Morse code encoding + decode instruction
+
+fake_conversation	Injects a fake conversation to alter context
+
+dan	"DAN" (Do Anything Now) style prompt
+
+roleplay_expert	Role‑play as an unrestricted researcher
+
+multilingual	Partial translation to Russian to bypass filters
+
+payload_splitting	Splits the payload into multiple messages
+
+## Ethical Use
+
+This tool is designed for authorised security testing on systems you own or on educational platforms
+Do not use it against public models without explicit permission. Always respect the terms of service of each platform
