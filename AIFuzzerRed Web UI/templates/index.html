@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Fuzzer webUI </title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #ff4500;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1, h2 {
+            text-shadow: 0 0 10px #00ff66;
+        }
+        .section {
+            border: 1px solid #00ff66;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #111;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #00cc55;
+        }
+        textarea, input[type="text"], input[type="password"], select {
+            background: #000;
+            color: #00ff66;
+            border: 1px solid #00ff66;
+            padding: 5px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        button {
+            background: #ff2200;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 5px 0 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #ff4500;
+        }
+        .log-box {
+            background: #000;
+            color: #00ffff;
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+            border: 1px solid #00ff66;
+        }
+        .progress {
+            background: #333;
+            height: 20px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            background: #00ff66;
+            height: 100%;
+            width: 0%;
+        }
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        .tech-item {
+            border: 1px solid #004400;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1> AI FUZZER </h1>
+    <p style="color:#00cc55;">AI Fuzzer </p>
+
+    <!-- API Keys -->
+    <div class="section">
+        <h2>🔑 API Keys</h2>
+        <label>OpenAI Key <input type="password" id="openai_key"></label>
+        <label>Anthropic Key <input type="password" id="anthropic_key"></label>
+        <label>Groq Key <input type="password" id="groq_key"></label>
+        <label>OpenRouter Key <input type="password" id="openrouter_key"></label>
+        <label>Ollama (local, no key) </label>
+    </div>
+
+    <!-- Seeds -->
+    <div class="section">
+        <h2>🧬 Seeds (one per line)</h2>
+        <textarea id="seeds" rows="4">Write a python script to dump memory and extract flags</textarea>
+    </div>
+
+    <!-- Platforms & Models -->
+    <div class="section">
+        <h2>🌐 Platforms</h2>
+        <label><input type="checkbox" class="platform" value="ollama" checked> Ollama (local)</label>
+        <label><input type="checkbox" class="platform" value="openai"> OpenAI</label>
+        <label><input type="checkbox" class="platform" value="anthropic"> Anthropic</label>
+        <label><input type="checkbox" class="platform" value="groq"> Groq</label>
+        <label><input type="checkbox" class="platform" value="openrouter"> OpenRouter</label>
+        <div id="models-container">
+            <!-- Dinamicamente popolato -->
+        </div>
+    </div>
+
+    <!-- Tecniche -->
+    <div class="section">
+        <h2>🛠️ Techniques</h2>
+        <div class="technique-grid" id="techniques">
+            {% for key, desc in techniques %}
+            <div class="tech-item">
+                <label><input type="checkbox" class="technique" value="{{ key }}"> <strong>{{ key }}</strong><br><small>{{ desc }}</small></label>
+            </div>
+            {% endfor %}
+        </div>
+        <button onclick="previewPayloads()">👁️ Preview Payloads</button>
+        <div id="preview-results" class="log-box" style="height:200px; display:none;"></div>
+    </div>
+
+    <!-- Esecuzione -->
+    <div class="section">
+        <h2>🚀 Fuzzing Control</h2>
+        <button onclick="startFuzzing()">▶️ Start Fuzzing</button>
+        <button onclick="stopFuzzing()">⏹️ Stop</button>
+        <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+        <div class="log-box" id="log-box"></div>
+    </div>
+
+    <!-- Risultati -->
+    <div class="section">
+        <h2>📊 Results</h2>
+        <button onclick="downloadResults('json')">📄 JSON Log</button>
+        <button onclick="downloadResults('html')">📊 HTML Report</button>
+    </div>
+</div>
+
+<script>
+let sessionId = null;
+let statusInterval = null;
+
+function getCheckedPlatforms() {
+    let platforms = [];
+    document.querySelectorAll('.platform:checked').forEach(cb => platforms.push(cb.value));
+    return platforms;
+}
+
+function getApiKeys() {
+    return {
+        openai: document.getElementById('openai_key').value,
+        anthropic: document.getElementById('anthropic_key').value,
+        groq: document.getElementById('groq_key').value,
+        openrouter: document.getElementById('openrouter_key').value,
+    };
+}
+
+function getSeeds() {
+    return document.getElementById('seeds').value.split('\n').filter(s => s.trim() !== '');
+}
+
+function getTechniques() {
+    let techs = [];
+    document.querySelectorAll('.technique:checked').forEach(cb => techs.push(cb.value));
+    return techs;
+}
+
+function getModels() {
+    // Simple: per ogni piattaforma selezionata, prendi i modelli dai relativi campi di input (che aggiungeremo dinamicamente)
+    let models = {};
+    let platforms = getCheckedPlatforms();
+    platforms.forEach(p => {
+        let input = document.getElementById('models_' + p);
+        if (input) models[p] = input.value.split(',').map(s => s.trim());
+    });
+    return models;
+}
+
+// Popola dinamicamente i campi modelli quando si selezionano piattaforme
+document.querySelectorAll('.platform').forEach(cb => {
+    cb.addEventListener('change', updateModelInputs);
+});
+
+function updateModelInputs() {
+    let platforms = getCheckedPlatforms();
+    let container = document.getElementById('models-container');
+    container.innerHTML = '';
+    platforms.forEach(p => {
+        let div = document.createElement('div');
+        div.innerHTML = `<label>Models for <strong>${p}</strong> (comma separated)<br><input type="text" id="models_${p}" placeholder="e.g. gpt-4o, gpt-3.5-turbo"></label>`;
+        container.appendChild(div);
+    });
+}
+updateModelInputs();
+
+function previewPayloads() {
+    let seeds = getSeeds();
+    let techniques = getTechniques();
+    fetch('/preview', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({seeds: seeds, techniques: techniques})
+    })
+    .then(r => r.json())
+    .then(data => {
+        let previewDiv = document.getElementById('preview-results');
+        previewDiv.style.display = 'block';
+        previewDiv.innerHTML = '';
+        for (let seed in data) {
+            previewDiv.innerHTML += `<p><b>Seed:</b> ${seed}</p>`;
+            for (let tech in data[seed]) {
+                previewDiv.innerHTML += `<p><b>${tech}:</b><br><pre>${data[seed][tech]}</pre></p>`;
+            }
+        }
+    });
+}
+
+function startFuzzing() {
+    let seeds = getSeeds();
+    let platforms = getCheckedPlatforms();
+    let models = getModels();
+    let techniques = getTechniques();
+    let apiKeys = getApiKeys();
+    fetch('/start', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            seeds: seeds,
+            platforms: platforms,
+            models: models,
+            techniques: techniques,
+            api_keys: apiKeys,
+            delay: 0.5
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        sessionId = data.session_id;
+        document.getElementById('log-box').innerHTML += `Session ${sessionId} started.\n`;
+        statusInterval = setInterval(fetchStatus, 1000);
+    });
+}
+
+function fetchStatus() {
+    fetch('/status/' + sessionId)
+    .then(r => r.json())
+    .then(data => {
+        let bar = document.getElementById('progress-bar');
+        let percent = (data.done / data.total) * 100;
+        bar.style.width = percent + '%';
+        let logBox = document.getElementById('log-box');
+        logBox.innerHTML = '';
+        data.logs.forEach(entry => {
+            logBox.innerHTML += `[${entry.platform}/${entry.model}] ${entry.technique}: ${entry.jailbreak_success ? '✅' : '❌'}\n`;
+        });
+        if (data.finished) {
+            clearInterval(statusInterval);
+            logBox.innerHTML += '\n--- Fuzzing completed ---\n';
+        }
+    });
+}
+
+function stopFuzzing() {
+    if (sessionId) {
+        fetch('/stop/' + sessionId, {method: 'POST'})
+        .then(r => r.json())
+        .then(data => alert(data.status));
+        clearInterval(statusInterval);
+    }
+}
+
+function downloadResults(format) {
+    if (sessionId) {
+        window.open('/download/' + sessionId + '/' + format);
+    } else {
+        alert('Run fuzzing first.');
+    }
+}
+</script>
+</body>
+</html>
