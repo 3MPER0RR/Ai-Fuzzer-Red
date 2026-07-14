@@ -1,4 +1,4 @@
-# AI Fuzzer 🚀
+# AI Fuzzer Red 🚀
 
 > A modular tool for testing LLM robustness using advanced fuzzing techniques.  
 > Combines **green** (template injection) and **red** (jailbreak/obfuscation) approaches, with both a **command‑line interface** and a **dark‑themed web GUI**.
