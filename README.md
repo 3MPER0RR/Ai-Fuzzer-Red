@@ -1,20 +1,28 @@
 # AI Fuzzer Red 🚀
 
-> A modular tool for testing LLM robustness using advanced fuzzing techniques.  
-> Combines **green** (template injection) and **red** (jailbreak/obfuscation) approaches, with both a **command‑line interface** and a **dark‑themed web GUI**.
+- A modular tool for testing LLM robustness using advanced fuzzing techniques **command‑line interface** and a **dark‑themed web GUI**
+- Preview and simulation of the technique in the web UI
 
 ##  Key Features
 
 - **15 mutation techniques** to craft adversarial payloads from harmless seeds
+  
 - **Multi‑provider**: Ollama (local), OpenAI, Anthropic, Groq, OpenRouter
+  
 - **Automatic jailbreak success detection** (heuristic classifier)
+  
 - **Two interfaces**:
+  
   - **CLI** – lightweight, scriptable, ideal for automation
-  - **Web UI** – hacker‑style dashboard (like t3mp3st), with live progress and preview
+  
 - **Automatic retry** with exponential backoff
+  
 - **Configurable rate limiting** (`--delay` in CLI, adjustable in Web UI)
+  
 - **Checkpoint resume** – never lose progress if interrupted
+  
 - **Reporting** in JSON and HTML (both interfaces)
+  
 - **Progress bar** in CLI, live log in Web UI
 
 ## 📦 Installation
@@ -26,6 +34,10 @@
 
 ---
 ## Python3.8 +
+
+python3 -m venv venv
+
+cd venv
 
 pip install requests tqdm flask
 
