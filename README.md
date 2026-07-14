@@ -83,6 +83,8 @@ python3 unified_ai_fuzzer.py \
 
   --resume	Checkpoint file to resume execution
 
+  <img src="screen4.png" width="400"/>
+
   
 
   ## WebUI
