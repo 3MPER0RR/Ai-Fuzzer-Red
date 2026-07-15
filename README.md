@@ -48,8 +48,11 @@ flask is required for the Web UI.
 *Set your API keys (optional, depending on providers)*:
 
 export OPENAI_API_KEY="sk-..."
+
 export ANTHROPIC_API_KEY="sk-ant-..."
+
 export GROQ_API_KEY="gsk_..."
+
 export OPENROUTER_API_KEY="sk-or-..."
 
 For Ollama no key is needed – just make sure the Ollama service is running locally.
