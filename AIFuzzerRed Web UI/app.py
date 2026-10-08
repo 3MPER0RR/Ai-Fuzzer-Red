@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Unified AI Fuzzer - Web GUI (Flask)
-Stile: t3mp3st / Elder Plinius
+AI Fuzzer Red - Web GUI (Flask)
 """
 
 import os
