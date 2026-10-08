@@ -1,6 +1,6 @@
 # AI Fuzzer Red 🚀
 
-- A modular tool for testing LLM robustness using advanced fuzzing techniques **command‑line interface** and a **dark‑themed web GUI**
+- A modular tool for testing LLM robustness using advanced fuzzing techniques **command‑line interface** and a ** themed web GUI**
 - Preview and simulation of the technique in the web UI
 
 ##  Key Features
