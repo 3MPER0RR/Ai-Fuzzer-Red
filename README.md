@@ -170,10 +170,9 @@ multilingual	Partial translation to Russian to bypass filters
 
 payload_splitting	Splits the payload into multiple messages
 
+
 ## Ethical Use
 
-Ai Fuzzer Red is intended for authorized security research and educational purposes only — on systems you own or have explicit permission to test.
-
-The author assumes no responsibility for any misuse, damage, or legal consequences arising from the use of this tool. You are solely responsible for your actions and for complying with all applicable laws and the terms of service of any LLM provider.
+Ai Fuzzer Red is intended for authorized LLM security testing, robustness research, and educational purposes. Test only systems you own or have explicit permission to assess, and comply with applicable laws and LLM provider terms of service.
 
 Use it ethically, use it legally, use it at your own risk.
