@@ -5,7 +5,7 @@
 
 ##  Key Features
 
-- **13 mutation techniques** to craft adversarial payloads from harmless seeds
+- **11 + 2 template -  mutation techniques** to craft adversarial payloads from harmless seeds
   
 - **Multi‑provider**: Ollama (local), OpenAI, Anthropic, Groq, OpenRouter
   
@@ -142,7 +142,7 @@ The UI provides a real‑time log with ✅/❌ indicators, a progress bar, and d
 <img src="screen1.png" width="400"/>
 
 
-## Available Techniques
+## Available Techniques + 2 template
 
 template_role	Injects a "security analyst" role
 
