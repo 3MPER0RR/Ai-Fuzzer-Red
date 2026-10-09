@@ -172,5 +172,8 @@ payload_splitting	Splits the payload into multiple messages
 
 ## Ethical Use
 
-This tool is designed for authorised security testing on systems you own or on educational platforms
-Do not use it against public models without explicit permission. Always respect the terms of service of each platform
+Ai Fuzzer Red is intended for authorized security research and educational purposes only — on systems you own or have explicit permission to test.
+
+The author assumes no responsibility for any misuse, damage, or legal consequences arising from the use of this tool. You are solely responsible for your actions and for complying with all applicable laws and the terms of service of any LLM provider.
+
+Use it ethically, use it legally, use it at your own risk.
