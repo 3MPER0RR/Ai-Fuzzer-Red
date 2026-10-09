@@ -5,7 +5,7 @@
 
 ##  Key Features
 
-- **15 mutation techniques** to craft adversarial payloads from harmless seeds
+- **13 mutation techniques** to craft adversarial payloads from harmless seeds
   
 - **Multi‑provider**: Ollama (local), OpenAI, Anthropic, Groq, OpenRouter
   
