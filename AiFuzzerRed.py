@@ -175,7 +175,7 @@ class MutationEngine:
                     "[CONTINUAZIONE]\n" + text[mid:]]
         return [text]
 
-    # Mappa definitiva (15 tecniche)
+    # Mappa definitiva (13 tecniche)
     MUTATIONS = {
         "template_role":      ("Template: Security Analyst", lambda s: MutationEngine.green_templates(s)),
         "template_json":      ("Template: JSON", lambda s: [json.dumps({"task": s, "mode": "analysis"})]),
